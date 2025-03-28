@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Statistik Perundungan di Indonesia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4338ca',
+                        secondary: '#6366f1',
+                        danger: '#dc2626',
+                        warning: '#f59e0b',
+                        info: '#0284c7'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .chart-container {
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+        .gradient-bg {
+            background: linear-gradient(to right, #4338ca, #6366f1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <header class="gradient-bg text-white py-6">
+        <div class="container mx-auto px-4">
+            <!-- Tombol Kembali di atas h1 -->
+            <div class="mb-4 text-left">
+                <a href="index.html" class="bg-white text-primary hover:bg-gray-100 py-2 px-4 rounded-lg inline-flex items-center font-medium transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Kembali
+                </a>
+            </div>
+            <h1 class="text-4xl font-bold text-center">Dashboard Statistik Perundungan di Indonesia</h1>
+            <p class="text-center mt-2 max-w-3xl mx-auto">Analisis data terbaru mengenai kasus perundungan dan kasus pelecehan seksual serta dampaknya terhadap remaja di Indonesia</p>
+        </div>
+    </header>
+
+    <!-- Main Stats Summary -->
+    <section class="py-8 bg-white shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-primary">
+                    <p class="text-gray-500 text-sm">Total Kasus Perundungan (2025)</p>
+                    <p class="text-3xl font-bold text-primary">24,568</p>
+                    <p class="text-danger text-sm">↑ 18.3% dari tahun sebelumnya</p>
+                </div>
+                <div class="bg-red-50 p-4 rounded-lg border-l-4 border-danger">
+                    <p class="text-gray-500 text-sm">Kasus Bunuh Diri Terkait</p>
+                    <p class="text-3xl font-bold text-danger">62</p>
+                    <p class="text-danger text-sm">↑ 21.6% dari tahun sebelumnya</p>
+                </div>
+                <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-warning">
+                    <p class="text-gray-500 text-sm">Kasus Pelecehan Seksual</p>
+                    <p class="text-3xl font-bold text-warning">3,782</p>
+                    <p class="text-danger text-sm">↑ 12.4% dari tahun sebelumnya</p>
+                </div>
+                <div class="bg-indigo-50 p-4 rounded-lg border-l-4 border-info">
+                    <p class="text-gray-500 text-sm">Tingkat Pelaporan</p>
+                    <p class="text-3xl font-bold text-info">32%</p>
+                    <p class="text-green-600 text-sm">↑ 5.2% dari tahun sebelumnya</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Charts Section -->
+    <section class="py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Suicide Cases Chart -->
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4">Kasus Bunuh Diri Akibat Perundungan (2020-2025)</h3>
+                    <div class="h-80">
+                        <canvas id="suicideChart"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-4">
+                        Sumber: Kementerian Kesehatan RI, Laporan Tahunan Kesehatan Mental Remaja 2025
+                    </p>
+                </div>
+                
+                <!-- School Bullying Impact Chart -->
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4">Dampak Perundungan di Sekolah (2025)</h3>
+                    <div class="h-80">
+                        <canvas id="schoolBullyingChart"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-4">
+                        Sumber: Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi, Survei Iklim Sekolah 2025
+                    </p>
+                </div>
+            </div>
+
+            <!-- Additional Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+                <!-- Regional Data Chart -->
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4">Provinsi dengan Kasus Perundungan Tertinggi (2025)</h3>
+                    <div class="h-80">
+                        <canvas id="regionalChart"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-4">
+                        Sumber: Badan Pusat Statistik, Survei Sosial Ekonomi Nasional 2025
+                    </p>
+                </div>
+                
+                <!-- Bullying Types Chart -->
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4">Jenis Perundungan yang Dilaporkan (2025)</h3>
+                    <div class="h-80">
+                        <canvas id="bullyingTypesChart"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-4">
+                        Sumber: KPAI (Komisi Perlindungan Anak Indonesia), Laporan Tahunan 2025
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sexual Harassment Cases -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold mb-6">Kasus Pelecehan Seksual Terkait Perundungan</h2>
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">Trend Kasus Pelecehan Seksual (2020-2025)</h3>
+                        <div class="h-80">
+                            <canvas id="sexualHarassmentChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">Rasio Kasus Berdasarkan Jenis Kelamin (2025)</h3>
+                        <div class="h-80">
+                            <canvas id="genderRatioChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500 mt-4">
+                    Sumber: Kementerian Pemberdayaan Perempuan dan Perlindungan Anak, Laporan Tahunan 2025
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interventions and Programs -->
+    <section class="py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold mb-6">Penanggulangan dan Program Anti-Perundungan</h2>
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center p-4">
+                        <div class="text-4xl font-bold text-primary mb-2">32%</div>
+                        <p class="text-gray-600">Kasus perundungan dilaporkan</p>
+                        <p class="text-sm text-gray-500 mt-2">↑ 5.2% dari tahun sebelumnya</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <div class="text-4xl font-bold text-primary mb-2">53%</div>
+                        <p class="text-gray-600">Korban mendapat bantuan psikologis</p>
+                        <p class="text-sm text-gray-500 mt-2">↑ 8.7% dari tahun sebelumnya</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <div class="text-4xl font-bold text-primary mb-2">47%</div>
+                        <p class="text-gray-600">Sekolah memiliki program anti-perundungan</p>
+                        <p class="text-sm text-gray-500 mt-2">↑ 12.5% dari tahun sebelumnya</p>
+                    </div>
+                </div>
+                <div class="mt-8">
+                    <h3 class="text-xl font-semibold mb-4">Efektivitas Program Anti-Perundungan</h3>
+                    <div class="h-80">
+                        <canvas id="programEffectivenessChart"></canvas>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500 mt-4">
+                    Sumber: Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi, Evaluasi Program Anti-Perundungan 2025
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="js/statistikdata.js"></script>
+</body>
+</html>

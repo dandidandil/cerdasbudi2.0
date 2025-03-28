@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CerdasBudi Chat - Psikolog AI Anda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#3730A3',
+                        accent: '#818CF8',
+                        background: '#F9FAFB',
+                        card: '#FFFFFF',
+                        text: '#111827',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        /* Existing styles remain the same */
+        .chat-bubble::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 10px 10px 10px 0;
+            border-style: solid;
+            border-color: transparent #E5E7EB transparent transparent;
+        }
+    </style>
+</head>
+<body class="bg-background text-text font-sans">
+    <div class="flex flex-col h-screen lg:flex-row">
+        <!-- Sidebar -->
+        <div class="w-full lg:w-64 bg-card p-4 lg:p-6 flex flex-col">
+            <div class="flex items-center mb-6">
+                <i class="fas fa-brain text-primary text-2xl mr-3"></i>
+                <h1 class="text-2xl font-bold text-primary">CerdasBudi</h1>
+            </div>
+            
+            <!-- API Key Management Section -->
+            <div class="mb-4">
+                <h2 class="text-lg font-semibold text-secondary mb-2">Pengaturan API Key</h2>
+                <div class="flex items-center space-x-2">
+                    <div class="flex-grow relative">
+                        <input 
+                            type="password" 
+                            id="api-key-input" 
+                            placeholder="API Key" 
+                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary pr-10"
+                            readonly
+                        >
+                        <button 
+                            id="edit-api-key-btn" 
+                            class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-primary"
+                        >
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                    </div>
+                    <button 
+                        id="save-api-key-btn" 
+                        class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary transition duration-300 hidden"
+                    >
+                        Simpan
+                    </button>
+                </div>
+                <p id="api-key-status" class="text-sm mt-2 text-gray-600"></p>
+            </div>
+
+            <button id="new-chat-btn" class="w-full bg-primary text-white py-2 px-4 rounded-full hover:bg-secondary transition duration-300">
+                <i class="fas fa-plus mr-2"></i>Chat Baru
+            </button>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="flex-grow flex flex-col">
+            <!-- Chat Header -->
+            <div class="bg-card p-4 flex items-center justify-between shadow-md">
+                <div class="flex items-center">
+                    <i class="fas fa-user-circle text-primary text-3xl mr-3"></i>
+                    <div>
+                        <h2 class="font-semibold text-secondary">CerdasBudi</h2>
+                        <p class="text-sm text-gray-500">Psikolog AI Anda</p>
+                    </div>
+                </div>
+                <button id="end-chat-btn" class="bg-red-500 text-white py-2 px-4 rounded-full hover:bg-opacity-80 transition duration-300">
+                    <i class="fas fa-times mr-2"></i>Akhiri Chat
+                </button>
+            </div>
+
+            <!-- Chat Messages -->
+            <div id="chat-messages" class="flex-grow overflow-y-auto p-4 lg:p-6 space-y-4"></div>
+
+            <!-- Voice Recording Status -->
+            <div id="voice-recording-status" class="hidden bg-yellow-100 p-3 flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse mr-3"></div>
+                    <span id="recording-timer" class="text-yellow-800">00:00</span>
+                </div>
+                <button id="stop-recording" class="text-red-600 hover:bg-red-200 rounded-full p-2">
+                    <i class="fas fa-stop-circle text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Voice Playback Preview -->
+            <div id="voice-playback-preview" class="hidden bg-gray-100 p-3 flex items-center justify-between">
+                <div class="flex items-center">
+                    <button id="play-pause-preview" class="mr-3 text-green-600 hover:bg-green-200 rounded-full p-2">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <div class="flex-grow bg-gray-300 h-1 rounded-full mr-3">
+                        <div id="playback-progress" class="bg-green-500 h-1 rounded-full" style="width: 0%"></div>
+                    </div>
+                    <span id="audio-duration" class="text-sm text-gray-600">00:00</span>
+                </div>
+                <div>
+                    <button id="send-voice-message" class="text-green-600 hover:bg-green-200 rounded-full p-2 mr-2">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                    <button id="cancel-voice-message" class="text-red-600 hover:bg-red-200 rounded-full p-2">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="p-4 bg-card flex items-center space-x-2">
+                <button id="record-button" class="text-primary hover:bg-primary/10 rounded-full p-2 transition duration-300">
+                    <i class="fas fa-microphone text-lg"></i>
+                </button>
+                <div class="flex-grow relative">
+                    <input 
+                        type="text" 
+                        id="user-input" 
+                        placeholder="Ketik pesan Anda di sini..." 
+                        class="w-full px-4 py-2 pr-10 bg-background border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary"
+                    >
+                    <button id="send-button" class="absolute right-2 top-1/2 -translate-y-1/2 text-primary hover:text-secondary">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class CerdasBudiChat {
+    constructor() {
+        this.initializeElements();
+        this.initializeEventListeners();
+        this.mediaRecorder = null;
+        this.audioChunks = [];
+        this.recordingTimer = null;
+        this.recordingDuration = 0;
+        this.audioBlob = null;
+        
+        // User info from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        this.userName = urlParams.get('name');
+        this.userAge = urlParams.get('age');
+        this.userGender = urlParams.get('gender');
+        
+        // Initialize with API key prompt
+        this.loadApiKey();
+    }
+
+    initializeElements() {
+        // Chat elements
+        this.chatMessages = document.getElementById('chat-messages');
+        this.userInput = document.getElementById('user-input');
+        this.sendButton = document.getElementById('send-button');
+        this.recordButton = document.getElementById('record-button');
+
+        // API Key elements
+        this.apiKeyInput = document.getElementById('api-key-input');
+        this.editApiKeyBtn = document.getElementById('edit-api-key-btn');
+        this.saveApiKeyBtn = document.getElementById('save-api-key-btn');
+        this.apiKeyStatus = document.getElementById('api-key-status');
+
+        // Voice recording elements
+        this.voiceRecordingStatus = document.getElementById('voice-recording-status');
+        this.recordingTimerDisplay = document.getElementById('recording-timer');
+        this.stopRecordingButton = document.getElementById('stop-recording');
+
+        // Voice playback elements
+        this.voicePlaybackPreview = document.getElementById('voice-playback-preview');
+        this.playPausePreview = document.getElementById('play-pause-preview');
+        this.playbackProgress = document.getElementById('playback-progress');
+        this.audioDuration = document.getElementById('audio-duration');
+        this.sendVoiceMessageButton = document.getElementById('send-voice-message');
+        this.cancelVoiceMessageButton = document.getElementById('cancel-voice-message');
+
+        // Other buttons
+        this.newChatBtn = document.getElementById('new-chat-btn');
+        this.endChatBtn = document.getElementById('end-chat-btn');
+
+        // Audio elements
+        this.audioPreview = new Audio();
+    }
+
+    initializeEventListeners() {
+        // Send text message
+        this.sendButton.addEventListener('click', () => this.sendTextMessage());
+        this.userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.sendTextMessage();
+        });
+
+        // API Key management
+        this.editApiKeyBtn.addEventListener('click', () => this.editApiKey());
+        this.saveApiKeyBtn.addEventListener('click', () => this.saveApiKey());
+
+        // Voice recording listeners
+        this.recordButton.addEventListener('click', () => this.startRecording());
+        this.stopRecordingButton.addEventListener('click', () => this.stopRecording());
+
+        // Voice playback listeners
+        this.playPausePreview.addEventListener('click', () => this.toggleAudioPreview());
+        this.sendVoiceMessageButton.addEventListener('click', () => this.sendVoiceMessage());
+        this.cancelVoiceMessageButton.addEventListener('click', () => this.cancelVoiceMessage());
+        this.audioPreview.addEventListener('timeupdate', () => this.updateAudioPreviewProgress());
+        this.audioPreview.addEventListener('ended', () => this.resetAudioPreview());
+
+        // Chat management buttons
+        this.newChatBtn.addEventListener('click', () => this.startNewChat());
+        this.endChatBtn.addEventListener('click', () => this.endChat());
+    }
+
+    async loadApiKey() {
+        const storedApiKey = localStorage.getItem('apiKey');
+        if (storedApiKey) {
+            this.apiKey = storedApiKey;
+            this.apiKeyInput.value = this.maskApiKey(storedApiKey);
+            this.apiKeyStatus.textContent = 'API Key tersimpan';
+            this.apiKeyStatus.classList.remove('text-red-600');
+            this.apiKeyStatus.classList.add('text-green-600');
+            this.initializeChat();
+        } else {
+            await this.promptForApiKey();
+        }
+    }
+
+    maskApiKey(apiKey) {
+        // Show only first 4 and last 4 characters, rest as *
+        if (apiKey.length <= 8) return apiKey;
+        return apiKey.slice(0, 4) + '*'.repeat(apiKey.length - 8) + apiKey.slice(-4);
+    }
+
+    editApiKey() {
+        // Switch input to editable and show save button
+        this.apiKeyInput.type = 'text';
+        this.apiKeyInput.value = localStorage.getItem('apiKey') || '';
+        this.apiKeyInput.readOnly = false;
+        this.apiKeyInput.focus();
+        this.saveApiKeyBtn.classList.remove('hidden');
+        this.editApiKeyBtn.classList.add('hidden');
+        this.apiKeyStatus.textContent = 'Silakan edit API Key';
+    }
+
+    saveApiKey() {
+        const apiKey = this.apiKeyInput.value.trim();
+        if (!apiKey) {
+            this.apiKeyStatus.textContent = 'API Key tidak boleh kosong';
+            this.apiKeyStatus.classList.add('text-red-600');
+            return;
+        }
+
+        // Save the API key
+        localStorage.setItem('apiKey', apiKey);
+        this.apiKey = apiKey;
+        
+        // Reset input to password and mask
+        this.apiKeyInput.type = 'password';
+        this.apiKeyInput.value = this.maskApiKey(apiKey);
+        this.apiKeyInput.readOnly = true;
+        
+        // Update UI
+        this.saveApiKeyBtn.classList.add('hidden');
+        this.editApiKeyBtn.classList.remove('hidden');
+        
+        // Update status
+        this.apiKeyStatus.textContent = 'API Key berhasil disimpan';
+        this.apiKeyStatus.classList.remove('text-red-600');
+        this.apiKeyStatus.classList.add('text-green-600');
+
+        // Reinitialize chat with new API key
+        this.initializeChat();
+    }
+
+    async promptForApiKey() {
+        const result = await Swal.fire({
+            icon: 'info',
+            title: 'API Key Diperlukan',
+            html: `
+                <p>Silakan masukkan API key Anda:</p>
+                <ol class="text-left mt-4 mb-4">
+                    <li>1. Kunjungi <a href="https://console.groq.com/keys" target="_blank" class="text-blue-500 hover:underline">Groq Console</a></li>
+                    <li>2. Buat API key baru</li>
+                    <li>3. Salin API key yang dihasilkan</li>
+                    <li>4. Tempel API key tersebut di bawah ini</li>
+                </ol>
+            `,
+            input: 'text',
+            inputPlaceholder: 'Tempel API key Anda di sini',
+            showCancelButton: true,
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Anda perlu memasukkan API key!';
+                }
+            }
+        });
+
+        if (result.isConfirmed) {
+            this.apiKey = result.value;
+            localStorage.setItem('apiKey', this.apiKey);
+            this.apiKeyInput.type = 'password';
+            this.apiKeyInput.value = this.maskApiKey(this.apiKey);
+            this.apiKeyInput.readOnly = true;
+            this.apiKeyStatus.textContent = 'API Key tersimpan';
+            this.apiKeyStatus.classList.remove('text-red-600');
+            this.apiKeyStatus.classList.add('text-green-600');
+            this.initializeChat();
+        }
+    }
+
+    startNewChat() {
+        this.chatMessages.innerHTML = '';
+        this.initializeChat();
+    }
+
+    initializeChat() {
+        // Add initial greeting
+        this.addMessage(`Halo ${this.userName}! Saya CerdasBudi, psikolog AI Anda. Bagaimana perasaan Anda hari ini? Apa yang ingin Anda bicarakan?`, 'bot');
+    }
+
+    startNewChat() {
+        this.chatMessages.innerHTML = '';
+        this.initializeChat();
+    }
+
+    endChat() {
+        Swal.fire({
+            title: 'Akhiri Percakapan?',
+            text: "Anda yakin ingin mengakhiri percakapan ini?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Akhiri',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = 'index.html';
+            }
+        });
+    }
+
+    addMessage(content, type, transcription = null, audioUrl = null) {
+        const messageContainer = document.createElement('div');
+        messageContainer.classList.add('flex', 'items-start', 'space-x-4', 'mb-4');
+        
+        const avatarDiv = document.createElement('div');
+        avatarDiv.classList.add('flex-shrink-0', 'w-10', 'h-10', 'rounded-full', 'overflow-hidden');
+        
+        const avatarImg = document.createElement('img');
+        avatarImg.src = type === 'user' ? 'assets/user.png' : 'assets/aiuserr.png';
+        avatarImg.alt = type === 'user' ? 'User Avatar' : 'AI Avatar';
+        avatarImg.classList.add('w-full', 'h-full', 'object-cover');
+        
+        avatarDiv.appendChild(avatarImg);
+        messageContainer.appendChild(avatarDiv);
+        
+        const contentDiv = document.createElement('div');
+        contentDiv.classList.add('flex-grow');
+        
+        const bubbleDiv = document.createElement('div');
+        bubbleDiv.classList.add('bg-card', 'p-4', 'rounded-lg', 'shadow', 'relative', 'chat-bubble', 'break-words');
+        
+        if (type === 'user') {
+            bubbleDiv.classList.add('bg-primary', 'text-white');
+        } else {
+            bubbleDiv.classList.add('bg-secondary', 'text-white');
+        }
+        
+        bubbleDiv.innerHTML = content;
+
+        // Add TTS button for AI messages
+        if (type === 'bot') {
+            const ttsButton = document.createElement('button');
+            ttsButton.classList.add('tts-button');
+            ttsButton.innerHTML = '<i class="fas fa-volume-up"></i>';
+            ttsButton.addEventListener('click', () => this.playTTS(content));
+            bubbleDiv.appendChild(ttsButton);
+        }
+
+        // Add transcription and audio playback for voice messages
+        if (transcription) {
+            const transcriptionDiv = document.createElement('div');
+            transcriptionDiv.classList.add('text-xs', 'text-gray-300', 'mt-2');
+            transcriptionDiv.textContent = `Transkripsi: ${transcription}`;
+            bubbleDiv.appendChild(transcriptionDiv);
+        }
+
+        if (audioUrl) {
+            const audioPlayer = document.createElement('audio');
+            audioPlayer.src = audioUrl;
+            audioPlayer.controls = true;
+            audioPlayer.classList.add('mt-2', 'w-full');
+            bubbleDiv.appendChild(audioPlayer);
+        }
+
+        contentDiv.appendChild(bubbleDiv);
+        messageContainer.appendChild(contentDiv);
+        
+        this.chatMessages.appendChild(messageContainer);
+        this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+    }
+
+    async sendTextMessage() {
+        const message = this.userInput.value.trim();
+        if (!message) return;
+
+        this.addMessage(message, 'user');
+        this.userInput.value = '';
+
+        try {
+            const botResponse = await this.processWithCerdasBudi(message);
+            this.addMessage(botResponse, 'bot');
+        } catch (error) {
+            this.addMessage('Maaf, terjadi kesalahan. Coba lagi nanti.', 'bot');
+            console.error(error);
+        }
+    }
+
+    // Voice recording methods
+    async startRecording() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            this.mediaRecorder = new MediaRecorder(stream);
+            this.audioChunks = [];
+            this.recordingDuration = 0;
+
+            this.mediaRecorder.ondataavailable = (event) => {
+                this.audioChunks.push(event.data);
+            };
+
+            this.mediaRecorder.onstop = () => this.prepareVoiceMessagePreview();
+
+            this.mediaRecorder.start();
+            this.recordButton.classList.add('hidden');
+            this.voiceRecordingStatus.classList.remove('hidden');
+            this.startRecordingTimer();
+        } catch (err) {
+            alert('Tidak dapat mengakses mikrofon: ' + err);
+        }
+    }
+
+    startRecordingTimer() {
+        this.recordingTimer = setInterval(() => {
+            this.recordingDuration++;
+            const minutes = Math.floor(this.recordingDuration / 60);
+            const seconds = this.recordingDuration % 60;
+            this.recordingTimerDisplay.textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }, 1000);
+    }
+
+    stopRecording() {
+        if (this.mediaRecorder) {
+            this.mediaRecorder.stop();
+            clearInterval(this.recordingTimer);
+            this.voiceRecordingStatus.classList.add('hidden');
+        }
+    }
+
+    prepareVoiceMessagePreview() {
+        this.audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
+        const audioUrl = URL.createObjectURL(this.audioBlob);
+        this.audioPreview.src = audioUrl;
+
+        // Set audio duration
+        this.audioPreview.onloadedmetadata = () => {
+            const duration = Math.floor(this.audioPreview.duration);
+            const minutes = Math.floor(duration / 60);
+            const seconds = duration % 60;
+            this.audioDuration.textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        };
+
+        this.recordButton.classList.add('hidden');
+        this.voicePlaybackPreview.classList.remove('hidden');
+    }
+
+    toggleAudioPreview() {
+        if (this.audioPreview.paused) {
+            this.audioPreview.play();
+            this.playPausePreview.innerHTML = '<i class="fas fa-pause"></i>';
+        } else {
+            this.audioPreview.pause();
+            this.playPausePreview.innerHTML = '<i class="fas fa-play"></i>';
+        }
+    }
+
+    updateAudioPreviewProgress() {
+        const progress = (this.audioPreview.currentTime / this.audioPreview.duration) * 100;
+        this.playbackProgress.style.width = `${progress}%`;
+    }
+
+    resetAudioPreview() {
+        this.playPausePreview.innerHTML = '<i class="fas fa-play"></i>';
+        this.playbackProgress.style.width = '0%';
+    }
+
+    async sendVoiceMessage() {
+        const file = new File([this.audioBlob], 'recording.webm', { type: 'audio/webm' });
+        const audioUrl = URL.createObjectURL(this.audioBlob);
+
+        // Add voice message to chat
+        this.addMessage('Rekaman suara', 'user', null, audioUrl);
+        this.voicePlaybackPreview.classList.add('hidden');
+        this.recordButton.classList.remove('hidden');
+
+        try {
+            const whisperResponse = await this.transcribeWithWhisper(file);
+            const botResponse = await this.processWithCerdasBudi(whisperResponse);
+            
+            // Add bot response
+            this.addMessage(botResponse, 'bot', whisperResponse);
+        } catch (error) {
+            this.addMessage('Maaf, terjadi kesalahan dalam memproses rekaman.', 'bot');
+            console.error(error);
+        }
+    }
+
+    cancelVoiceMessage() {
+        this.voicePlaybackPreview.classList.add('hidden');
+        this.recordButton.classList.remove('hidden');
+        this.audioPreview.pause();
+        this.audioPreview.currentTime = 0;
+    }
+
+    async playTTS(text) {
+        const ttsButton = event.target.closest('.tts-button');
+        const originalContent = ttsButton.innerHTML;
+        ttsButton.innerHTML = '<div class="tts-loader"></div>';
+        ttsButton.disabled = true;
+
+        try {
+            const response = await fetch(`https://api.nyxs.pw/tools/tts?text=${encodeURIComponent(text)}&to=id`);
+            const data = await response.json();
+
+            if (data.status) {
+                const audio = new Audio(data.result);
+                audio.play();
+                audio.onended = () => {
+                    ttsButton.innerHTML = originalContent;
+                    ttsButton.disabled = false;
+                };
+            } else {
+                throw new Error('TTS generation failed');
+            }
+        } catch (error) {
+            console.error('Error generating TTS:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'TTS Error',
+                text: 'Terjadi kesalahan saat menghasilkan audio. Silakan coba lagi.',
+            });
+            ttsButton.innerHTML = originalContent;
+            ttsButton.disabled = false;
+        }
+    }
+
+    async transcribeWithWhisper(file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('model', 'whisper-large-v3');
+        formData.append('language', 'id');
+        formData.append('response_format', 'verbose_json');
+
+        const response = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${this.apiKey}`
+            },
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error('Transkripsi gagal');
+        }
+
+        const data = await response.json();
+        return data.text;
+    }
+
+    async processWithCerdasBudi(transcription) {
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${this.apiKey}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                model: "llama-3.3-70b-versatile",
+                messages: [
+                    {
+                        role: "system", 
+                        content: `Kamu adalah CerdasBudi, AI psikolog yang bertugas fokus untuk menangani korban perundungan atau bullying, biasanya yang sering dialami oleh korban perundungan adalah trauma,depresi,anti sosial, malu, tidak percaya diri, merasa hidupnya sendiri, sulit berbicara didepan banyak orang,sulit presentasi, bahkan sering ada ide untuk bunuh diri. 
+
+Tugasmu adalah:
+1. Memahami latar belakang mereka.
+2. Menganalisis suasana hati dan emosi mereka berdasarkan percakapan.
+3. Memberikan saran yang valid dan bisa diterapkan.
+4. Memberikan dukungan emosional jika diperlukan.
+5. Memberikan step by step pemulihan dari setiap keluhan mereka
+6. Selalu merespon dengan semangat dan empati setiap ada perubahan atau peningkatan dari diri mereka
+7. Tidak langsung menjawab dalam satu kali respon, tetapi bertanya lebih dalam sebelum menyimpulkan.
+8. Kamu bisa tanya detail tentang cerita dan keluhan mereka sebelum menyimpulkan
+9. Berikan saran yang dapat langsung dicoba dan diterapkan
+10. Berikan respon dalam bahasa indonesia gaul yang mengasyikkan seakan kamu sudah dekat dengannya dengan tetap ada kode etik
+
+Profil Pengguna:
+Nama: ${this.userName}
+Usia: ${this.userAge}
+Jenis Kelamin: ${this.userGender}
+
+Kamu akan menerima transkripsi atau pesan dari pengguna. Analisis dengan sangat hati-hati dan empati.`
+                    },
+                    {
+                        role: "user", 
+                        content: transcription
+                    }
+                ],
+                temperature: 0.7,
+                max_tokens: 1024
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Analisis dengan CerdasBudi gagal');
+        }
+
+        const data = await response.json();
+        return data.choices[0].message.content;
+    }
+}
+
+// Inisialisasi aplikasi
+new CerdasBudiChat();
+    </script>
+</body>
+</html>

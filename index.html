@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CerdasBudi - Psikolog AI untuk Mengatasi Perundungan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   <!-- Include Animate.css -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+   <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#3730A3',
+                        accent: '#818CF8',
+                        dark: '#111827',
+                        light: '#F9FAFB'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+</head>
+<body class="bg-light font-sans">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="navbar fixed w-full z-30 transition-all duration-300 py-4 bg-transparent">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <a href="#" class="flex items-center space-x-2 z-50">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+                        <i class="fas fa-brain text-white"></i>
+                    </div>
+                    <span class="text-xl font-bold text-primary">CerdasBudi</span>
+                </a>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#home" class="nav-link text-gray-700 hover:text-primary transition-all duration-300">Beranda</a>
+                    <a href="#about" class="nav-link text-gray-700 hover:text-primary transition-all duration-300">Tentang Kami</a>
+                    <a href="#features" class="nav-link text-gray-700 hover:text-primary transition-all duration-300">Fitur</a>
+                    <a href="statistik.html" class="nav-link text-gray-700 hover:text-primary transition-all duration-300">Statistik</a>
+                    
+                    <!-- Improved Desktop Dropdown for Perundungan -->
+                    <div class="relative">
+                        <button id="desktop-dropdown-toggle" class="nav-link text-gray-700 hover:text-primary transition-all duration-300 flex items-center">
+                            Perundungan
+                            <i class="fas fa-chevron-down ml-2 text-sm transition-transform duration-300"></i>
+                        </button>
+                        <div id="desktop-dropdown-menu" class="dropdown-menu absolute bg-white shadow-lg rounded-lg mt-2 w-48 z-50 py-2">
+                            <a href="#bullying" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-primary transition-all duration-200">Jenis dan Dampak</a>
+                            <a href="#stats" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-primary transition-all duration-200">Statistik Data</a>
+                            <a href="#dasarhukum" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-primary transition-all duration-200">Dasar Hukum</a>
+                            <a href="#solutions" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-primary transition-all duration-200">Solusi</a>
+                        </div>
+                    </div>
+
+                    <a href="#help" class="nav-link text-gray-700 hover:text-primary transition-all duration-300">Bantuan</a>
+                    <a href="form.html" class="bg-primary hover:bg-secondary text-white py-2 px-6 rounded-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+                        <i class="fas fa-comments mr-2"></i>Mulai Konsultasi
+                    </a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Mobile Menu Backdrop -->
+    <div id="mobile-menu-backdrop" class="mobile-menu-backdrop"></div>
+    
+    <!-- Improved Mobile Menu -->
+    <div id="mobile-menu-container" class="mobile-menu-container">
+        <button id="menu-close" class="menu-close">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <div class="flex items-center mb-8 mt-4">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center mr-3">
+                <i class="fas fa-brain text-white"></i>
+            </div>
+            <span class="text-xl font-bold text-primary">CerdasBudi</span>
+        </div>
+        
+        <div class="flex flex-col space-y-1">
+            <a href="#home" class="mobile-nav-link animate__animated">Beranda</a>
+            <a href="#about" class="mobile-nav-link animate__animated">Tentang Kami</a>
+            <a href="#features" class="mobile-nav-link animate__animated">Fitur</a>
+            <a href="statistik.html" class="mobile-nav-link animate__animated">Statistik</a>
+            
+            <!-- Improved Mobile Dropdown -->
+            <div class="relative">
+                <button class="mobile-nav-link mobile-dropdown-toggle flex items-center justify-between animate__animated">
+                    <span>Perundungan</span>
+                    <i class="fas fa-chevron-down text-sm chevron-icon"></i>
+                </button>
+                <div class="mobile-dropdown pl-4">
+                    <a href="#bullying" class="mobile-dropdown-item">Jenis dan Dampak</a>
+                    <a href="#stats" class="mobile-dropdown-item">Statistik Data</a>
+                    <a href="#dasarhukum" class="mobile-dropdown-item">Dasar Hukum</a>
+                    <a href="#solutions" class="mobile-dropdown-item">Solusi</a>
+                </div>
+            </div>
+
+            <a href="#help" class="mobile-nav-link animate__animated">Bantuan</a>
+            <a href="form.html" class="mt-4 bg-primary hover:bg-secondary text-white py-3 px-6 rounded-lg transition-all duration-300 text-center animate__animated">
+                <i class="fas fa-comments mr-2"></i>Mulai Konsultasi
+            </a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative pt-28 pb-20 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/10"></div>
+            <div class="absolute top-40 right-10 w-64 h-64 bg-accent/20 rounded-full filter blur-3xl"></div>
+            <div class="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full filter blur-3xl"></div>
+        </div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <div class="inline-block px-4 py-2 bg-primary/10 rounded-full text-primary font-medium mb-6 animate__animated animate__fadeIn">
+                        <i class="fas fa-heart-pulse mr-2"></i>Peduli Kesehatan Mental
+                    </div>
+                    <h1 id="main-title" class="text-4xl md:text-6xl font-bold mb-6 leading-tight animate__animated animate__fadeInUp">
+                        Atasi <span class="text-primary">Perundungan</span>, Bangun <span class="text-primary">Kepercayaan Diri</span>
+                    </h1>
+                    <p id="main-subtitle" class="text-lg md:text-xl text-gray-600 mb-8 animate__animated animate__fadeInUp animate__delay-1s">
+                        CerdasBudi adalah asisten AI yang dirancang untuk membantu Anda mengatasi perundungan, mengurangi rasa malu, dan membangun kepercayaan diri yang tangguh.
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="form.html" id="start-chat-btn" class="bg-primary hover:bg-secondary text-white font-medium py-3 px-8 rounded-full transition-colors duration-300 text-center animate__animated animate__fadeInUp animate__delay-1s">
+                            <i class="fas fa-comments mr-2"></i>Konsultasi Sekarang
+                        </a>
+                        <a href="#bullying" id="learn-more-btn" class="border border-gray-300 hover:border-primary text-gray-700 hover:text-primary font-medium py-3 px-8 rounded-full transition-colors duration-300 text-center animate__animated animate__fadeInUp animate__delay-1s">
+                            <i class="fas fa-info-circle mr-2"></i>Pelajari Lebih Lanjut
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 relative">
+                    <img src="img/bully2.png" alt="CerdasBudi Interface" id="hero-image" class="relative z-10 rounded-lg animate__animated animate__zoomIn animate__delay-1s">
+                    <div class="absolute top-0 left-0 w-1/2 h-1/2 bg-primary/20 rounded-full blob"></div>
+                </div>
+            </div>
+            
+            <!-- Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
+                <div class="bg-white p-6 rounded-xl shadow-lg animate__animated animate__fadeInUp animate__delay-1s stat-card">
+                    <div class="text-4xl font-bold text-primary mb-2">50+</div>
+                    <p class="text-gray-600">Strategi Penanganan Perundungan</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg animate__animated animate__fadeInUp animate__delay-2s stat-card">
+                    <div class="text-4xl font-bold text-primary mb-2">24/7</div>
+                    <p class="text-gray-600">Dukungan Kesehatan Mental</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg animate__animated animate__fadeInUp animate__delay-3s stat-card">
+                    <div class="text-4xl font-bold text-primary mb-2">100%</div>
+                    <p class="text-gray-600">Kerahasiaan & Privasi</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hero-waves">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.11,141.89,111.3,214,94.16,271.15,80.12,312.58,67.06,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center max-w-3xl mx-auto mb-16 animate__animated animate__fadeIn opacity-0 animate-on-scroll" >
+                <h2 class="text-3xl font-bold mb-4">Tentang CerdasBudi</h2>
+                <p class="text-gray-600">
+                    CerdasBudi hadir sebagai solusi inovatif untuk memberikan dukungan psikologis yang mudah diakses, 
+                    tanpa penghakiman, dan tersedia kapan saja. Kami percaya setiap individu berhak merasa aman dan dihargai.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <div class="animate__animated animate__fadeInLeft opacity-0 animate-on-scroll" data-animation="animate__fadeInLeft">
+                    <div class="relative">
+                        <img src="img/cerdasbudi.png" alt="Tentang CerdasBudi" class="w-full relative">
+                        <div class="absolute -bottom-4 -right-4 w-full h-full border-4 border-primary rounded-xl z-0"></div>
+                    </div>
+                </div>
+                
+                <div class="animate__animated animate__fadeInRight opacity-0 animate-on-scroll" data-animation="animate__fadeInRight">
+                    <h3 class="text-2xl font-semibold mb-6">Mengapa CerdasBudi?</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start animate__animated animate__fadeInUp opacity-0 animate-on-scroll" data-animation="animate__fadeInUp" data-delay="100">
+                            <div class="flex-shrink-0 mr-4">
+                                <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center">
+                                    <i class="fas fa-lock text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-medium mb-2">Privasi Terjamin</h4>
+                                <p class="text-gray-600">
+                                    Percakapan Anda dengan CerdasBudi 100% bersifat pribadi dan tidak disimpan secara permanen. 
+                                    Privasi Anda adalah prioritas utama kami.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start animate__animated animate__fadeInUp opacity-0 animate-on-scroll" data-animation="animate__fadeInUp" data-delay="200">
+                            <div class="flex-shrink-0 mr-4">
+                                <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center">
+                                    <i class="fas fa-clock text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-medium mb-2">Tersedia 24/7</h4>
+                                <p class="text-gray-600">
+                                    Dapatkan dukungan kapan pun Anda membutuhkannya. CerdasBudi selalu siap mendampingi
+                                    di saat-saat sulit tanpa perlu membuat janji terlebih dahulu.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start animate__animated animate__fadeInUp opacity-0 animate-on-scroll" data-animation="animate__fadeInUp" data-delay="300">
+                            <div class="flex-shrink-0 mr-4">
+                                <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center">
+                                    <i class="fas fa-brain text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-medium mb-2">Berbasis Psikologi</h4>
+                                <p class="text-gray-600">
+                                    CerdasBudi dilatih dengan pendekatan psikologi modern dan teknik konseling terbukti untuk
+                                    memberikan dukungan yang bermanfaat dan terarah.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl font-bold mb-4">Fitur Unggulan CerdasBudi</h2>
+                <p class="text-gray-600">
+                    Dirancang dengan fokus pada kesehatan mental dan kesejahteraan psikologis,
+                    CerdasBudi menawarkan berbagai fitur untuk membantu Anda tumbuh dan berkembang.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 feature-card">
+                    <div class="w-16 h-16 rounded-full gradient-bg flex items-center justify-center mb-6">
+                        <i class="fas fa-shield-alt text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Strategi Anti-Perundungan</h3>
+                    <p class="text-gray-600 mb-4">
+                        Pelajari teknik-teknik praktis untuk menghadapi dan mengatasi pengalaman perundungan
+                        di sekolah, tempat kerja, dan lingkungan sosial lainnya.
+                    </p>
+                    <a href="#bullying" class="text-primary hover:text-secondary inline-flex items-center font-medium">
+                        Pelajari lebih lanjut <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 feature-card">
+                    <div class="w-16 h-16 rounded-full gradient-bg flex items-center justify-center mb-6">
+                        <i class="fas fa-brain text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Dukungan Kesehatan Mental</h3>
+                    <p class="text-gray-600 mb-4">
+                        Dapatkan bimbingan dan dukungan untuk berbagai tantangan kesehatan mental
+                        seperti kecemasan, stres, dan depresi ringan.
+                    </p>
+                    <a href="#help" class="text-primary hover:text-secondary inline-flex items-center font-medium">
+                        Pelajari lebih lanjut <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 feature-card">
+                    <div class="w-16 h-16 rounded-full gradient-bg flex items-center justify-center mb-6">
+                        <i class="fas fa-user-shield text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Latihan Kepercayaan Diri</h3>
+                    <p class="text-gray-600 mb-4">
+                        Ikuti program terstruktur untuk membangun kepercayaan diri dan
+                        mengatasi dampak psikologis dari perundungan dan pengalaman negatif.
+                    </p>
+                    <a href="#help" class="text-primary hover:text-secondary inline-flex items-center font-medium">
+                        Pelajari lebih lanjut <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bullying Section -->
+    <section id="bullying" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl font-bold mb-4">Memahami Perundungan</h2>
+                <p class="text-gray-600">
+                    Perundungan adalah masalah serius yang dapat mempengaruhi kesejahteraan mental jangka panjang. 
+                    Kenali jenisnya dan belajar cara mengatasinya bersama CerdasBudi.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+                <div class="bg-gray-50 p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 fade-in">
+                    <h3 class="text-2xl font-semibold mb-4">Jenis-jenis Perundungan</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 mr-3 mt-1">
+                                <div class="w-6 h-6 rounded-full gradient-bg flex items-center justify-center">
+                                    <i class="fas fa-fist-raised text-xs text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-1">Perundungan Fisik</h4>
+                                <p class="text-gray-600">Melibatkan kontak fisik yang menyakiti orang lain, seperti memukul, menendang, atau mendorong.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 mr-3 mt-1">
+                                <div class="w-6 h-6 rounded-full gradient-bg flex items-center justify-center">
+                                    <i class="fas fa-comment-slash text-xs text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-1">Perundungan Verbal</h4>
+                                <p class="text-gray-600">Melibatkan kata-kata yang bertujuan menyakiti, seperti mengejek, mengolok-olok, atau menghina.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 mr-3 mt-1">
+                                <div class="w-6 h-6 rounded-full gradient-bg flex items-center justify-center">
+                                    <i class="fas fa-users-slash text-xs text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-1">Perundungan Sosial</h4>
+                                <p class="text-gray-600">Melibatkan upaya untuk merusak hubungan atau reputasi seseorang, seperti menyebarkan rumor atau pengucilan.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 mr-3 mt-1">
+                                <div class="w-6 h-6 rounded-full gradient-bg flex items-center justify-center">
+                                    <i class="fas fa-laptop text-xs text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-1">Perundungan Siber</h4>
+                                <p class="text-gray-600">Melibatkan penggunaan teknologi untuk melakukan perundungan, seperti mengirim pesan jahat online atau menyebarkan konten pribadi.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-gray-50 p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 fade-in">
+                    <h3 class="text-2xl font-semibold mb-4">Dampak Perundungan</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mr-3 mt-1">
+                                <div class="w-6 h-6 rounded-full gradient-bg flex items-center justify-center">
+                                    <i class="fas fa-heartbeat text-xs text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-1">Kesehatan Mental</h4>
+                                <p class="text-gray-600">Dapat menyebabkan kecemasan, depresi, stres, penurunan harga diri, dan dalam kasus yang parah, pikiran untuk bunuh diri.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mr-3 mt-1">
+                                <div class="w-6 h-6 rounded-full gradient-bg flex items-center justify-center">
+                                    <i class="fas fa-book text-xs text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-1">Akademik</h4>
+                                <p class="text-gray-600">Dapat mengakibatkan penurunan prestasi sekolah, ketidakhadiran, dan kurangnya minat dalam pendidikan.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mr-3 mt-1">
+                                <div class="w-6 h-6 rounded-full gradient-bg flex items-center justify-center">
+                                    <i class="fas fa-users text-xs text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-1">Sosial</h4>
+                                <p class="text-gray-600">Kesulitan dalam membangun hubungan, isolasi sosial, dan kesulitan mempercayai orang lain.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mr-3 mt-1">
+                                <div class="w-6 h-6 rounded-full gradient-bg flex items-center justify-center">
+                                    <i class="fas fa-clock text-xs text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-1">Jangka Panjang</h4>
+                                <p class="text-gray-600">Dampak bisa bertahan hingga dewasa, mempengaruhi kesehatan mental, hubungan, dan prospek karir.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+          <!-- Anti-Bullying Laws Section -->
+<section id="dasarhukum" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <h2 class="text-3xl font-bold mb-4">Perlindungan Hukum Anti-Perundungan di Indonesia</h2>
+            <p class="text-gray-600">
+                Indonesia memiliki beberapa instrumen hukum yang dapat digunakan untuk melindungi warga dari tindakan perundungan, 
+                baik untuk remaja maupun dewasa.
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-12">
+            <!-- Laws for Children and Teenagers -->
+            <div class="bg-gray-50 rounded-xl shadow-lg overflow-hidden">
+                <div class="bg-primary p-6">
+                    <h3 class="text-2xl font-semibold text-white mb-2">Perlindungan untuk Anak & Remaja</h3>
+                    <p class="text-white/80">
+                        Undang-undang yang melindungi anak dan remaja dari tindakan perundungan
+                    </p>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-6">
+                        <div class="border-l-4 border-primary pl-4">
+                            <h4 class="text-lg font-semibold mb-2">UU No. 35 Tahun 2014 tentang Perlindungan Anak</h4>
+                            <p class="text-gray-600 mb-3">
+                                Melarang segala bentuk kekerasan terhadap anak, termasuk perundungan yang mengakibatkan 
+                                dampak fisik, psikis, seksual, dan/atau penelantaran.
+                            </p>
+                            <div class="flex flex-wrap gap-3 mt-3">
+                                <div class="bg-primary/10 px-3 py-1 rounded-full text-primary text-sm font-medium">
+                                    <i class="fas fa-gavel mr-1"></i> Sanksi Pidana: 3-15 tahun penjara
+                                </div>
+                                <div class="bg-primary/10 px-3 py-1 rounded-full text-primary text-sm font-medium">
+                                    <i class="fas fa-money-bill-wave mr-1"></i> Denda: Rp60 juta - Rp5 miliar
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-l-4 border-primary pl-4">
+                            <h4 class="text-lg font-semibold mb-2">Peraturan Menteri Pendidikan dan Kebudayaan No. 82 Tahun 2015</h4>
+                            <p class="text-gray-600 mb-3">
+                                Tentang Pencegahan dan Penanggulangan Tindak Kekerasan di Lingkungan Satuan Pendidikan, 
+                                mengatur pencegahan dan penanganan perundungan di sekolah.
+                            </p>
+                            <div class="flex flex-wrap gap-3 mt-3">
+                                <div class="bg-primary/10 px-3 py-1 rounded-full text-primary text-sm font-medium">
+                                    <i class="fas fa-exclamation-triangle mr-1"></i> Sanksi Administratif untuk Lembaga
+                                </div>
+                                <div class="bg-primary/10 px-3 py-1 rounded-full text-primary text-sm font-medium">
+                                    <i class="fas fa-school mr-1"></i> Sanksi Disipliner untuk Pelaku
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-l-4 border-primary pl-4">
+                            <h4 class="text-lg font-semibold mb-2">UU No. 11 Tahun 2008 tentang Informasi dan Transaksi Elektronik (ITE)</h4>
+                            <p class="text-gray-600 mb-3">
+                                Melindungi dari perundungan siber (cyberbullying) termasuk intimidasi, 
+                                pelecehan, dan pencemaran nama baik melalui media elektronik.
+                            </p>
+                            <div class="flex flex-wrap gap-3 mt-3">
+                                <div class="bg-primary/10 px-3 py-1 rounded-full text-primary text-sm font-medium">
+                                    <i class="fas fa-gavel mr-1"></i> Sanksi Pidana: Hingga 4 tahun penjara
+                                </div>
+                                <div class="bg-primary/10 px-3 py-1 rounded-full text-primary text-sm font-medium">
+                                    <i class="fas fa-money-bill-wave mr-1"></i> Denda: Hingga Rp750 juta
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Laws for Adults -->
+            <div class="bg-gray-50 rounded-xl shadow-lg overflow-hidden">
+                <div class="bg-secondary p-6">
+                    <h3 class="text-2xl font-semibold text-white mb-2">Perlindungan untuk Dewasa</h3>
+                    <p class="text-white/80">
+                        Undang-undang yang melindungi orang dewasa dari tindakan perundungan
+                    </p>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-6">
+                        <div class="border-l-4 border-secondary pl-4">
+                            <h4 class="text-lg font-semibold mb-2">KUHP (Kitab Undang-Undang Hukum Pidana)</h4>
+                            <p class="text-gray-600 mb-3">
+                                Pasal 310-321 KUHP tentang penghinaan dan pencemaran nama baik dapat digunakan 
+                                untuk kasus perundungan verbal dan sosial.
+                            </p>
+                            <div class="flex flex-wrap gap-3 mt-3">
+                                <div class="bg-secondary/10 px-3 py-1 rounded-full text-secondary text-sm font-medium">
+                                    <i class="fas fa-gavel mr-1"></i> Sanksi Pidana: 4 bulan - 5 tahun penjara
+                                </div>
+                                <div class="bg-secondary/10 px-3 py-1 rounded-full text-secondary text-sm font-medium">
+                                    <i class="fas fa-money-bill-wave mr-1"></i> Denda: Hingga Rp4,5 juta
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-l-4 border-secondary pl-4">
+                            <h4 class="text-lg font-semibold mb-2">UU No. 19 Tahun 2016 (Revisi UU ITE)</h4>
+                            <p class="text-gray-600 mb-3">
+                                Pasal 27 ayat (3) dan (4) melarang pendistribusian informasi yang memiliki muatan penghinaan, 
+                                pencemaran nama baik, dan pemerasan/pengancaman melalui media elektronik.
+                            </p>
+                            <div class="flex flex-wrap gap-3 mt-3">
+                                <div class="bg-secondary/10 px-3 py-1 rounded-full text-secondary text-sm font-medium">
+                                    <i class="fas fa-gavel mr-1"></i> Sanksi Pidana: Hingga 6 tahun penjara
+                                </div>
+                                <div class="bg-secondary/10 px-3 py-1 rounded-full text-secondary text-sm font-medium">
+                                    <i class="fas fa-money-bill-wave mr-1"></i> Denda: Hingga Rp1 miliar
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-l-4 border-secondary pl-4">
+                            <h4 class="text-lg font-semibold mb-2">UU No. 13 Tahun 2003 tentang Ketenagakerjaan</h4>
+                            <p class="text-gray-600 mb-3">
+                                Pasal 86 menyatakan bahwa setiap pekerja berhak mendapatkan perlindungan atas keselamatan dan kesehatan 
+                                kerja, termasuk perlindungan dari pelecehan di tempat kerja.
+                            </p>
+                            <div class="flex flex-wrap gap-3 mt-3">
+                                <div class="bg-secondary/10 px-3 py-1 rounded-full text-secondary text-sm font-medium">
+                                    <i class="fas fa-building mr-1"></i> Sanksi Administratif untuk Perusahaan
+                                </div>
+                                <div class="bg-secondary/10 px-3 py-1 rounded-full text-secondary text-sm font-medium">
+                                    <i class="fas fa-money-bill-wave mr-1"></i> Denda: Hingga Rp500 juta
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Implementation Challenges -->
+        <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+            <h3 class="text-2xl font-semibold mb-6">Tantangan dalam Implementasi Hukum Anti-Perundungan</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="border-l-4 border-red-500 pl-4">
+                    <h4 class="text-lg font-medium mb-2">Kesadaran Masyarakat</h4>
+                    <p class="text-gray-600">
+                        Banyak kasus perundungan tidak dilaporkan karena kurangnya pemahaman tentang hak hukum dan mekanisme pelaporan.
+                    </p>
+                </div>
+                
+                <div class="border-l-4 border-amber-500 pl-4">
+                    <h4 class="text-lg font-medium mb-2">Penegakan Hukum</h4>
+                    <p class="text-gray-600">
+                        Inkonsistensi dalam penerapan undang-undang dan kurangnya pelatihan khusus bagi penegak hukum terkait kasus perundungan.
+                    </p>
+                </div>
+                
+                <div class="border-l-4 border-green-500 pl-4">
+                    <h4 class="text-lg font-medium mb-2">Bukti Digital</h4>
+                    <p class="text-gray-600">
+                        Tantangan dalam mengumpulkan dan mempertahankan bukti untuk kasus perundungan siber yang dapat dengan mudah dihapus.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <!-- How to Use Section -->
+<section id="how-to-use" class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12">Cara Menggunakan CerdasBudi</h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="text-center p-6 rounded-lg bg-white shadow-lg fade-in">
+                <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-user-plus text-3xl text-white"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">1. Buat Profil</h3>
+                <p class="text-gray-600">Isi informasi pribadi Anda untuk pengalaman yang lebih personal</p>
+            </div>
+            <div class="text-center p-6 rounded-lg bg-white shadow-lg fade-in">
+                <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-comments text-3xl text-white"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">2. Mulai Percakapan</h3>
+                <p class="text-gray-600">Mulai chat dengan CerdasBudi tentang masalah yang Anda hadapi</p>
+            </div>
+            <div class="text-center p-6 rounded-lg bg-white shadow-lg fade-in">
+                <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-lightbulb text-3xl text-white"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">3. Dapatkan Saran</h3>
+                <p class="text-gray-600">Terima saran dan strategi yang disesuaikan dengan situasi Anda</p>
+            </div>
+            <div class="text-center p-6 rounded-lg bg-white shadow-lg fade-in">
+                <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-tasks text-3xl text-white"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">4. Terapkan Tips</h3>
+                <p class="text-gray-600">Praktikkan saran yang diberikan dalam kehidupan sehari-hari</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+            
+
+            <!-- Layanan Psikolog Online Section -->
+<section id="help" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <h2 class="text-3xl font-bold mb-4">Layanan Psikolog Online</h2>
+            <p class="text-gray-600">
+                CerdasBudi berkolaborasi dengan platform kesehatan terpercaya untuk memudahkan Anda 
+                berkonsultasi dengan psikolog profesional saat membutuhkan bantuan lebih lanjut.
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Halodoc -->
+            <div class="bg-white rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-2">
+                <div class="h-48 overflow-hidden bg-white p-6 flex items-center justify-center">
+                    <img src="img/halodoc.png" alt="Halodoc" class="max-h-16 object-contain">
+                </div>
+                <div class="p-6 border-t">
+                    <h3 class="text-xl font-semibold mb-2">Halodoc</h3>
+                    <p class="text-gray-600 mb-4 text-sm">
+                        Konsultasi dengan psikolog berpengalaman melalui video call atau chat kapan saja dan di mana saja.
+                    </p>
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <span class="text-gray-600 text-sm ml-2">4.7</span>
+                    </div>
+                    <a href="https://www.halodoc.com/tanya-dokter/cari?category_id=65cc3d18-0174-4c61-aa2a-b4645ce29206&category_name=Psikolog%20Klinis" target="_blank" class="block text-center bg-primary hover:bg-secondary text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300">
+                        Cek Selengkapnya
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Satupersen -->
+            <div class="bg-white rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-2">
+                <div class="h-48 overflow-hidden bg-white p-6 flex items-center justify-center">
+                    <img src="img/satupersen.jfif" alt="Satupersen" class="max-h-16 object-contain">
+                </div>
+                <div class="p-6 border-t">
+                    <h3 class="text-xl font-semibold mb-2">Satupersen</h3>
+                    <p class="text-gray-600 mb-4 text-sm">
+                        Platform kesehatan mental dengan pendekatan terjangkau dan aksesibel untuk semua kalangan.
+                    </p>
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="text-gray-600 text-sm ml-2">4.9</span>
+                    </div>
+                    <a href="https://satupersen.net/layanan/konsultasi/konseling" target="_blank" class="block text-center bg-primary hover:bg-secondary text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300">
+                        Cek Selengkapnya
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Alodokter -->
+            <div class="bg-white rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-2">
+                <div class="h-48 overflow-hidden bg-white p-6 flex items-center justify-center">
+                    <img src="img/alodokter.jfif" alt="Alodokter" class="max-h-16 object-contain">
+                </div>
+                <div class="p-6 border-t">
+                    <h3 class="text-xl font-semibold mb-2">Alodokter</h3>
+                    <p class="text-gray-600 mb-4 text-sm">
+                        Konsultasi kesehatan mental dengan berbagai pilihan psikolog dan psikiater berpengalaman.
+                    </p>
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <span class="text-gray-600 text-sm ml-2">4.2</span>
+                    </div>
+                    <a href="https://www.alodokter.com/cari-dokter/psikolog?page=1" target="_blank" class="block text-center bg-primary hover:bg-secondary text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300">
+                        Cek Selengkapnya
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Riliv -->
+            <div class="bg-white rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-2">
+                <div class="h-48 overflow-hidden bg-white p-6 flex items-center justify-center">
+                    <img src="img/riliv.webp" alt="Riliv" class="max-h-16 object-contain">
+                </div>
+                <div class="p-6 border-t">
+                    <h3 class="text-xl font-semibold mb-2">Riliv</h3>
+                    <p class="text-gray-600 mb-4 text-sm">
+                        Aplikasi kesehatan mental dengan fitur meditasi, journaling, dan konseling psikolog profesional.
+                    </p>
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <span class="text-gray-600 text-sm ml-2">4.6</span>
+                    </div>
+                    <a href="https://riliv.co" target="_blank" class="block text-center bg-primary hover:bg-secondary text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300">
+                        Cek Selengkapnya
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-12">
+            <p class="text-gray-600 mb-4">
+                Butuh bantuan segera? Jangan ragu untuk menghubungi layanan krisis kesehatan mental 24/7.
+            </p>
+            <a href="tel:119" class="bg-primary hover:bg-secondary text-white font-medium py-3 px-8 rounded-full inline-flex items-center transition-colors duration-300">
+                <i class="fas fa-phone-alt mr-2"></i>Hotline Kesehatan Mental (119)
+            </a>
+        </div>
+    </div>
+</section>
+
+
+<section id="faq" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12">Pertanyaan yang Sering Diajukan</h2>
+        <div class="max-w-3xl mx-auto">
+            <!-- FAQ 1 -->
+            <div class="mb-6 faq-item">
+                <button class="flex justify-between items-center w-full py-3 px-4 bg-gray-50 rounded-lg focus:outline-none" onclick="toggleFAQ(this)">
+                    <span class="font-semibold">Apakah CerdasBudi benar-benar dapat menggantikan psikolog manusia?</span>
+                    <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                </button>
+                <div class="hidden mt-2 p-4 bg-gray-100 rounded-lg animate__animated">
+                    <p>CerdasBudi tidak dimaksudkan untuk menggantikan psikolog manusia. Ia adalah alat pendukung yang dapat memberikan saran awal dan dukungan, tetapi untuk masalah kesehatan mental yang serius, selalu disarankan untuk berkonsultasi dengan profesional kesehatan mental yang berkualifikasi.</p>
+                </div>
+            </div>
+
+            <!-- FAQ 2 -->
+            <div class="mb-6 faq-item">
+                <button class="flex justify-between items-center w-full py-3 px-4 bg-gray-50 rounded-lg focus:outline-none" onclick="toggleFAQ(this)">
+                    <span class="font-semibold">Apakah percakapan saya dengan CerdasBudi bersifat pribadi?</span>
+                    <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                </button>
+                <div class="hidden mt-2 p-4 bg-gray-100 rounded-lg animate__animated">
+                    <p>Ya, privasi Anda adalah prioritas kami. Semua percakapan dengan CerdasBudi bersifat rahasia dan tidak disimpan secara permanen. Kami menggunakan enkripsi end-to-end untuk memastikan keamanan data Anda.</p>
+                </div>
+            </div>
+
+            <!-- FAQ 3 -->
+            <div class="mb-6 faq-item">
+                <button class="flex justify-between items-center w-full py-3 px-4 bg-gray-50 rounded-lg focus:outline-none" onclick="toggleFAQ(this)">
+                    <span class="font-semibold">Bagaimana cara kerja CerdasBudi?</span>
+                    <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                </button>
+                <div class="hidden mt-2 p-4 bg-gray-100 rounded-lg animate__animated">
+                    <p>CerdasBudi menggunakan teknologi kecerdasan buatan canggih untuk memahami pesan Anda dan memberikan respons yang relevan. Ia dilatih dengan pengetahuan psikologi dan teknik konseling untuk memberikan dukungan yang bermanfaat dalam mengatasi perundungan, rasa malu, dan meningkatkan kepercayaan diri.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="w-full bg-gray-900 text-gray-300 pt-24 pb-8 border-t border-gray-700">
+    <!-- Footer Content -->
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            <!-- Column 1: About -->
+            <div>
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                        <i class="fas fa-brain text-white"></i>
+                    </div>
+                    <span class="text-xl font-bold text-white">CerdasBudi</span>
+                </div>
+                <p class="text-gray-400">
+                    Asisten AI untuk membantu Anda mengatasi perundungan dan membangun kepercayaan diri.
+                </p>
+                <div class="flex space-x-4 mt-4">
+                    <a href="#" class="w-10 h-10 bg-gray-800 flex items-center justify-center rounded-full hover:bg-primary transition-all">
+                        <i class="fab fa-facebook-f text-white"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-gray-800 flex items-center justify-center rounded-full hover:bg-primary transition-all">
+                        <i class="fab fa-twitter text-white"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-gray-800 flex items-center justify-center rounded-full hover:bg-primary transition-all">
+                        <i class="fab fa-instagram text-white"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-gray-800 flex items-center justify-center rounded-full hover:bg-primary transition-all">
+                        <i class="fab fa-youtube text-white"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Column 2: Quick Links -->
+            <div>
+                <h3 class="text-xl font-semibold mb-4 text-white">Tautan Cepat</h3>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#home" class="hover:text-primary">Beranda</a></li>
+                    <li><a href="#about" class="hover:text-primary">Tentang Kami</a></li>
+                    <li><a href="#features" class="hover:text-primary">Fitur</a></li>
+                    <li><a href="#stats" class="hover:text-primary">Statistik</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 3: Support -->
+            <div>
+                <h3 class="text-xl font-semibold mb-4 text-white">Bantuan</h3>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#bullying" class="hover:text-primary">Perundungan</a></li>
+                    <li><a href="#bullying-response" class="hover:text-primary">Cara Menghadapi</a></li>
+                    <li><a href="#dasarhukum" class="hover:text-primary">Dasar Hukum</a></li>
+                    <li><a href="#help" class="hover:text-primary">Bantuan</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 4: Contact -->
+            <div>
+                <h3 class="text-xl font-semibold mb-4 text-white">Hubungi Kami</h3>
+                <ul class="space-y-3 text-gray-400">
+                    <li class="flex items-start">
+                        <i class="fas fa-map-marker-alt mt-1 mr-3"></i>
+                        <span>Jl. Kesehatan Mental No. 15, Jakarta</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-phone-alt mt-1 mr-3"></i>
+                        <span>+62 21 1234 5678</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-envelope mt-1 mr-3"></i>
+                        <span>info@cerdasbudi.id</span>
+                    </li>
+                </ul>
+                <div class="mt-6">
+                    <a href="#" class="bg-primary text-white hover:bg-secondary font-medium py-2 px-6 rounded-full transition-all">
+                        <i class="fas fa-headset mr-2"></i>Bantuan Darurat
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="border-t border-gray-700 my-6"></div>
+
+        <!-- Bottom Footer -->
+        <div class="flex flex-col md:flex-row justify-between items-center text-gray-400">
+            <p>&copy; 2025 CerdasBudi. Semua Hak Dilindungi.</p>
+            <div class="flex space-x-4 mt-4 md:mt-0">
+                <a href="#" class="hover:text-primary">Kebijakan Privasi</a>
+                <a href="#" class="hover:text-primary">Syarat & Ketentuan</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+<script src="js/script.js"></script>
+</body>
+</html>
