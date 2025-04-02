@@ -25,6 +25,12 @@ class CerdasBudiChat {
         this.sendButton = document.getElementById('send-button');
         this.recordButton = document.getElementById('record-button');
 
+        // API Key elements
+        this.apiKeyInput = document.getElementById('api-key-input');
+        this.editApiKeyBtn = document.getElementById('edit-api-key-btn');
+        this.saveApiKeyBtn = document.getElementById('save-api-key-btn');
+        this.apiKeyStatus = document.getElementById('api-key-status');
+
         // Voice recording elements
         this.voiceRecordingStatus = document.getElementById('voice-recording-status');
         this.recordingTimerDisplay = document.getElementById('recording-timer');
@@ -53,6 +59,10 @@ class CerdasBudiChat {
             if (e.key === 'Enter') this.sendTextMessage();
         });
 
+        // API Key management
+        this.editApiKeyBtn.addEventListener('click', () => this.editApiKey());
+        this.saveApiKeyBtn.addEventListener('click', () => this.saveApiKey());
+
         // Voice recording listeners
         this.recordButton.addEventListener('click', () => this.startRecording());
         this.stopRecordingButton.addEventListener('click', () => this.stopRecording());
@@ -73,10 +83,61 @@ class CerdasBudiChat {
         const storedApiKey = localStorage.getItem('apiKey');
         if (storedApiKey) {
             this.apiKey = storedApiKey;
+            this.apiKeyInput.value = this.maskApiKey(storedApiKey);
+            this.apiKeyStatus.textContent = 'API Key tersimpan';
+            this.apiKeyStatus.classList.remove('text-red-600');
+            this.apiKeyStatus.classList.add('text-green-600');
             this.initializeChat();
         } else {
             await this.promptForApiKey();
         }
+    }
+
+    maskApiKey(apiKey) {
+        // Show only first 4 and last 4 characters, rest as *
+        if (apiKey.length <= 8) return apiKey;
+        return apiKey.slice(0, 4) + '*'.repeat(apiKey.length - 8) + apiKey.slice(-4);
+    }
+
+    editApiKey() {
+        // Switch input to editable and show save button
+        this.apiKeyInput.type = 'text';
+        this.apiKeyInput.value = localStorage.getItem('apiKey') || '';
+        this.apiKeyInput.readOnly = false;
+        this.apiKeyInput.focus();
+        this.saveApiKeyBtn.classList.remove('hidden');
+        this.editApiKeyBtn.classList.add('hidden');
+        this.apiKeyStatus.textContent = 'Silakan edit API Key';
+    }
+
+    saveApiKey() {
+        const apiKey = this.apiKeyInput.value.trim();
+        if (!apiKey) {
+            this.apiKeyStatus.textContent = 'API Key tidak boleh kosong';
+            this.apiKeyStatus.classList.add('text-red-600');
+            return;
+        }
+
+        // Save the API key
+        localStorage.setItem('apiKey', apiKey);
+        this.apiKey = apiKey;
+        
+        // Reset input to password and mask
+        this.apiKeyInput.type = 'password';
+        this.apiKeyInput.value = this.maskApiKey(apiKey);
+        this.apiKeyInput.readOnly = true;
+        
+        // Update UI
+        this.saveApiKeyBtn.classList.add('hidden');
+        this.editApiKeyBtn.classList.remove('hidden');
+        
+        // Update status
+        this.apiKeyStatus.textContent = 'API Key berhasil disimpan';
+        this.apiKeyStatus.classList.remove('text-red-600');
+        this.apiKeyStatus.classList.add('text-green-600');
+
+        // Reinitialize chat with new API key
+        this.initializeChat();
     }
 
     async promptForApiKey() {
@@ -105,8 +166,19 @@ class CerdasBudiChat {
         if (result.isConfirmed) {
             this.apiKey = result.value;
             localStorage.setItem('apiKey', this.apiKey);
+            this.apiKeyInput.type = 'password';
+            this.apiKeyInput.value = this.maskApiKey(this.apiKey);
+            this.apiKeyInput.readOnly = true;
+            this.apiKeyStatus.textContent = 'API Key tersimpan';
+            this.apiKeyStatus.classList.remove('text-red-600');
+            this.apiKeyStatus.classList.add('text-green-600');
             this.initializeChat();
         }
+    }
+
+    startNewChat() {
+        this.chatMessages.innerHTML = '';
+        this.initializeChat();
     }
 
     initializeChat() {
@@ -168,9 +240,25 @@ class CerdasBudiChat {
         // Add TTS button for AI messages
         if (type === 'bot') {
             const ttsButton = document.createElement('button');
-            ttsButton.classList.add('tts-button');
+            ttsButton.classList.add('tts-button', 'flex', 'items-center', 'justify-center', 'w-8', 'h-8', 'rounded-full', 'bg-primary', 'text-white', 'hover:bg-secondary', 'transition', 'duration-300');
             ttsButton.innerHTML = '<i class="fas fa-volume-up"></i>';
-            ttsButton.addEventListener('click', () => this.playTTS(content));
+            ttsButton.addEventListener('click', async () => {
+                ttsButton.innerHTML = '<div class="loader"></div>'; // Show loading animation
+                ttsButton.disabled = true;
+                try {
+                    await this.playTTS(content);
+                } catch (error) {
+                    console.error('Error generating TTS:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'TTS Error',
+                        text: 'Terjadi kesalahan saat menghasilkan audio. Silakan coba lagi.',
+                    });
+                } finally {
+                    ttsButton.innerHTML = '<i class="fas fa-volume-up"></i>'; // Restore icon
+                    ttsButton.disabled = false;
+                }
+            });
             bubbleDiv.appendChild(ttsButton);
         }
 
@@ -321,34 +409,14 @@ class CerdasBudiChat {
     }
 
     async playTTS(text) {
-        const ttsButton = event.target.closest('.tts-button');
-        const originalContent = ttsButton.innerHTML;
-        ttsButton.innerHTML = '<div class="tts-loader"></div>';
-        ttsButton.disabled = true;
+        const response = await fetch(`https://api.nyxs.pw/tools/tts?text=${encodeURIComponent(text)}&to=id`);
+        const data = await response.json();
 
-        try {
-            const response = await fetch(`https://api.nyxs.pw/tools/tts?text=${encodeURIComponent(text)}&to=id`);
-            const data = await response.json();
-
-            if (data.status) {
-                const audio = new Audio(data.result);
-                audio.play();
-                audio.onended = () => {
-                    ttsButton.innerHTML = originalContent;
-                    ttsButton.disabled = false;
-                };
-            } else {
-                throw new Error('TTS generation failed');
-            }
-        } catch (error) {
-            console.error('Error generating TTS:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'TTS Error',
-                text: 'Terjadi kesalahan saat menghasilkan audio. Silakan coba lagi.',
-            });
-            ttsButton.innerHTML = originalContent;
-            ttsButton.disabled = false;
+        if (data.status) {
+            const audio = new Audio(data.result);
+            audio.play();
+        } else {
+            throw new Error('TTS generation failed');
         }
     }
 
